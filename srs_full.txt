@@ -1,0 +1,1108 @@
+
+SOFTWARE REQUIREMENTS SPECIFICATION (SRS)
+CBE INVENTORY MANAGEMENT SYSTEMCommercial Bank of Ethiopia (CBE)
+
+Prepared by:Firomsa TesfayeAdama Science and Technology University
+
+1. INTRODUCTION
+1.1 Purpose
+The purpose of this Software Requirements Specification (SRS) is to define the functional and non-functional requirements of the proposed CBE IT Hardware Inventory Management System.
+The system is intended to digitize and improve the management of IT hardware assets and their maintenance activities currently handled through Microsoft Excel, paper-based records, and manual processes.
+The system will provide a centralized platform for registering, tracking, assigning, dispatching, receiving, maintaining, and monitoring IT hardware assets across branches and IT support locations.
+It will also maintain the history of hardware-related maintenance activities and provide reports to authorized users.
+1.2 Project Scope
+The CBE IT Hardware Inventory Management System will manage the lifecycle of IT hardware from registration and deployment through assignment, dispatch, maintenance, reassignment, retirement, or disposal. Equipment may be received by the IT support team from a branch for maintenance or technical preparation.
+The system will support:
+Hardware registration
+Asset identification and tagging
+Hardware technical inspection
+Inventory management
+Asset assignment
+Equipment dispatch
+Equipment receipt confirmation
+Maintenance completion and dispatch back to the responsible branch
+Hardware problem reporting
+Maintenance management
+Asset dispatch and assignment tracking
+Asset status tracking
+Search and filtering
+Reports and statistics
+User and role management
+Audit logging
+Attachment/document management
+The system will focus specifically on IT hardware asset tracking, assignment, dispatch, and hardware-related maintenance. It is not a warehouse stock, purchasing, or procurement management system.
+It will not attempt to replace the complete CBE Incident Management or IT Service Management platform.
+2. BACKGROUND
+2.1 Existing Situation
+During requirement gathering at the CBE branch, it was observed that hardware inventory information is maintained using Microsoft Excel and manual/paper-based processes.
+The existing records contain information such as:
+Branch/Manager
+Item
+Contact Person
+Telephone
+M/INC/SR Number
+Asset Type
+Model
+Serial Number
+CBE Tag Number
+Condition
+Description
+WS Number
+Attachment
+Assigned Technician
+Status
+Sent Date
+Dispatched Date
+Receiver Name
+Receiver ID
+Receiver Phone
+Receiver Signature
+The current process makes it difficult to obtain centralized and real-time information about hardware assets and their history.
+2.2 Problems with the Existing System
+The following problems were identified:
+Hardware records are mainly maintained using Excel.
+Records can become difficult to search as the number of assets increases.
+Asset dispatch and movement are manually tracked.
+Equipment dispatch and receipt confirmation records are not centralized.
+Maintenance history is difficult to follow.
+It is difficult to determine the current location of an asset quickly.
+It is difficult to identify who is currently responsible for an asset.
+Report generation requires manual processing.
+Paper-based receiver information and signatures can be difficult to manage.
+There is limited centralized historical tracking of asset activities.
+Maintenance and asset history are difficult to track manually.
+Hardware problems reported by branches/customers need to be connected with the corresponding hardware asset.
+3. OBJECTIVES
+The main objectives of the system are:
+To digitize IT hardware inventory records.
+To reduce dependence on Excel and paper-based records.
+To provide centralized hardware information.
+To track the complete lifecycle of hardware assets.
+To improve accountability for hardware movement.
+To track asset assignment and location.
+To manage hardware maintenance activities.
+To maintain maintenance history for each asset.
+To simplify equipment dispatch and receipt confirmation.
+To provide search and filtering capabilities.
+To generate inventory and maintenance reports.
+To provide role-based access.
+To maintain an audit trail of important system activities.
+4. SYSTEM STAKEHOLDERS
+The major stakeholders are:
+4.1 System Administrator
+Responsible for system configuration, user management, permissions, and overall system administration.
+4.2 IT Inventory Officer / IT Support Officer
+Responsible for registering, tracking, dispatching, and maintaining accurate IT hardware asset records.
+4.3 IT / Hardware Technician
+Responsible for technical inspection, hardware maintenance, diagnosis, repair, and technical evaluation.
+4.4 Branch Manager
+Responsible for requesting equipment, receiving equipment, monitoring branch hardware, and reporting hardware problems.
+4.5 Management
+Uses reports and dashboards to monitor hardware inventory, maintenance, and asset distribution.
+5. SYSTEM USERS AND ROLES
+5.1 System Administrator
+The System Administrator shall be able to:
+Create user accounts.
+Update user accounts.
+Disable or activate users.
+Assign roles.
+Manage permissions.
+Manage branch information.
+View system-wide inventory.
+View audit logs.
+Generate system-wide reports.
+Monitor system activities.
+5.2 IT Inventory Officer
+The IT Inventory Officer shall be able to:
+Register hardware.
+Update asset information.
+Generate or assign asset tag numbers.
+Receive equipment from branches or other authorized locations when required.
+View available and assigned asset records.
+Dispatch equipment.
+Record receiver information.
+Record equipment receipt.
+Receive equipment from maintenance, verify the maintenance result, and prepare it for dispatch back to the responsible branch.
+Update inventory status.
+Search assets.
+Generate inventory reports.
+5.3 Hardware Technician
+The Hardware Technician shall be able to:
+View assigned maintenance tasks.
+Perform technical inspection.
+Record hardware problems.
+Diagnose hardware problems.
+Record repair activities.
+Install operating systems.
+Record software installation.
+Perform security checks.
+Update maintenance status.
+Record maintenance results.
+View maintenance history.
+Update technical evaluation reports.
+5.4 Branch Manager
+The Branch Manager shall be able to:
+View branch hardware.
+Submit maintenance/problem requests.
+View request status.
+Confirm equipment receipt.
+Report hardware problems.
+View maintenance status.
+View equipment assigned to the branch.
+View relevant asset information.
+6. SYSTEM BOUNDARIES
+6.1 Included
+The system includes:
+Hardware inventory
+Hardware registration
+Asset identification
+Asset assignment
+Asset movement
+Dispatch
+Receipt
+Maintenance
+Hardware problem reporting
+Technical inspection and preparation
+Reports
+User management
+Audit logging
+6.2 Not Included
+The following are outside the main project scope:
+Full CBE enterprise Incident Management
+Full IT Service Management
+Financial accounting
+Procurement payment processing
+Employee payroll
+Network monitoring
+Complete customer relationship management
+Hardware-related problem reporting is included only because it is directly connected to the hardware maintenance lifecycle.
+7. SYSTEM OVERVIEW
+The proposed system will provide a centralized web-based application.
+The general workflow is:
+Hardware Received
+        ↓
+Asset Registration
+        ↓
+Technical Inspection
+        ↓
+Asset availability tracking
+        ↓
+Assignment
+        ↓
+Dispatch
+        ↓
+Branch
+        ↓
+Equipment in Use
+        ↓
+Hardware Problem Reported
+        ↓
+Maintenance Request
+        ↓
+Technician Inspection
+        ↓
+Repair / Maintenance
+        ↓
+Dispatch back to branch / Reassignment
+        ↓
+Inventory Updated
+Maintenance, assignment, dispatch, and attachment history will be associated with the asset throughout its lifecycle.
+8. FUNCTIONAL REQUIREMENTS
+FR-01 User Authentication
+The system shall allow authorized users to log in using their credentials.
+The system shall:
+Authenticate users.
+Verify user credentials.
+Maintain user sessions.
+Prevent unauthorized access.
+Provide role-based access.
+FR-02 User Management
+The System Administrator shall be able to:
+Create users.
+Update users.
+Activate users.
+Deactivate users.
+Assign roles.
+Assign users to branches.
+Search users.
+Each user shall have information such as:
+User ID
+Full Name
+Employee ID
+Phone Number
+Email
+Role
+Branch
+Account Status
+FR-03 Branch Management
+The system shall maintain branch information.
+Branch information shall include:
+Branch ID
+Branch Name
+Branch Code
+Manager Name
+Contact Person
+Telephone Number
+Location
+The System Administrator shall be able to add, update, and manage branch information.
+FR-04 Asset Registration
+The system shall allow authorized users to register hardware.
+Asset information shall include:
+Asset ID
+CBE Tag Number
+Serial Number
+Asset Type
+Model
+WS Number
+Condition
+Description
+Current Status
+Current Location
+Attachment
+Examples of asset types include:
+Desktop Computer
+Laptop
+Monitor
+Printer
+UPS
+Scanner
+Keyboard
+Mouse
+Network Equipment
+Other IT Hardware
+FR-05 Asset Identification and Tagging
+The system shall allow each hardware asset to have a unique CBE Asset Tag Number.
+The system shall:
+Prevent duplicate asset tag numbers.
+Store the serial number.
+Allow searching using the asset tag.
+Optionally generate a QR code or barcode for the asset.
+FR-06 Maintenance Preparation and Technical Inspection
+The system shall allow authorized technicians to perform technical inspection and preparation as part of the maintenance workflow when equipment requires technical checking before deployment or after repair.
+The evaluation may include:
+Hardware condition
+Operating system installation
+Software installation
+Wi-Fi/network testing
+Hardware testing
+Security configuration
+General technical condition
+Technician remarks
+The system shall record inspection and preparation results as part of the maintenance history; no separate inspection entity is required.
+FR-07 Asset Assignment
+The system shall allow authorized users to assign equipment to an employee or other responsible party and associate the assignment with the responsible branch.
+The assignment shall record:
+Asset
+Employee/Responsible Person
+Employee ID
+Branch
+Assignment Date
+Assigned By
+Status
+The system shall maintain previous assignment history.
+FR-08 Equipment Dispatch
+The system shall allow authorized users to dispatch equipment.
+Dispatch information shall include:
+Asset
+Source location
+Destination branch
+Receiver Name
+Receiver ID
+Receiver Phone
+Dispatched Date
+Receiver Signature
+Dispatch Status
+FR-09 Dispatch Receipt Confirmation
+The receiving user shall be able to confirm receipt of dispatched equipment as part of the same dispatch process; no separate receipt entity is required.
+The system shall:
+Record the receipt.
+Update the asset status.
+Record receiver information.
+Update the dispatch record to show that the equipment was received.
+Store the digital signature where applicable.
+FR-10 Hardware Problem Reporting
+The system shall allow a Branch Manager or authorized staff member to report a hardware-related problem.
+The maintenance request shall contain:
+Request ID
+Asset
+Branch
+Reported By (FK to User)
+Problem Description
+Date Reported
+Priority
+The problem report shall be linked to the corresponding asset.
+FR-11 Maintenance Management
+The system shall allow technicians to manage hardware maintenance, including inspection, diagnosis, repair, software installation, security configuration, testing, and final technical verification.
+Maintenance information shall include:
+Maintenance ID
+Technician
+Diagnosis
+Repair Action
+Parts/Materials Used
+Start Date
+Completion Date
+Maintenance Status
+Technician Remarks / Software and Security Configuration
+The maintenance workflow may include operating system installation, required software installation, security checks, configuration, testing, and final technical verification.
+When parts or materials are required, the technician shall record the materials used and, where procurement is needed, the recommended specification or model. Actual purchasing and payment are outside the system scope.
+FR-12 Technician Assignment
+The system shall allow an authorized user to assign a maintenance request to an authorized technician.
+The system shall record:
+Maintenance Request
+Technician
+Status
+The assigned technician shall be able to view and update the single maintenance record associated with the request.
+FR-13 Maintenance Status
+Maintenance status may include:
+Reported
+Received
+Assigned
+Under Inspection
+Under Repair
+Waiting for Parts
+Repaired
+Completed
+Closed
+Important maintenance status changes shall be recorded in the audit log.
+FR-14 Maintenance History
+The system shall maintain historical maintenance records for each asset through the related maintenance request and maintenance record.
+For example:
+Asset: CBE-10234
+10/07/2026
+Problem: Computer not booting
+Technician: Technician A
+Action: Operating system reinstalled
+Status: Repaired
+25/07/2026
+Problem: Network connection problem
+Technician: Technician B
+Action: Network adapter replaced
+Status: Repaired
+Authorized users shall be able to view this history.
+FR-15 Asset Status Management
+The system shall maintain the current status of each asset.
+Possible statuses include:
+Available
+Assigned
+In Transit
+Under Maintenance
+Damaged
+Lost
+Disposed
+Retired
+Only authorized users shall be allowed to change asset status.
+FR-16 Search and Filtering
+The system shall provide asset search functionality.
+Users shall be able to search using:
+CBE Tag Number
+Serial Number
+Asset Type
+Model
+WS Number
+Branch
+Employee ID
+Status
+Users shall also be able to filter inventory records.
+FR-17 Dashboard
+The system shall provide dashboards appropriate to each role.
+Administrator Dashboard
+May display:
+Total Assets
+Total Branches
+Total Users
+Assets Under Maintenance
+Assigned Assets
+Available Assets
+Damaged Assets
+Recent Activities
+IT Inventory Officer Dashboard
+May display:
+Available Inventory
+Recently Received
+Recently Dispatched
+Pending Requests
+Technician Dashboard
+May display:
+Assigned Maintenance
+Pending Inspection
+Under Repair
+Parts / Material Needs
+Completed Maintenance
+Branch Manager Dashboard
+May display:
+Branch Assets
+Assigned Equipment
+Pending Requests
+Maintenance Requests
+Equipment in Transit
+FR-18 Notifications
+The system may provide notifications for important events such as:
+New maintenance/problem request
+Equipment dispatched
+Equipment received
+Maintenance assigned
+Maintenance completed
+FR-19 Reports
+The system shall generate reports including:
+Inventory Reports
+Total inventory
+Inventory by branch
+Inventory by asset type
+Inventory by condition
+Inventory by status
+Maintenance Reports
+Assets under maintenance
+Completed maintenance
+Maintenance history
+Maintenance by technician
+Frequently repaired assets
+Dispatch and Assignment Reports
+Dispatch history
+Assignment history
+FR-20 Export
+Authorized users shall be able to export reports in:
+PDF
+Excel
+FR-21 Attachment Management
+The system shall allow authorized users to attach supporting documents or images to relevant records.
+Examples:
+Equipment documents
+Technical evaluation
+Repair document
+Maintenance document
+Dispatch document
+Receiver signature
+FR-22 Audit Log
+The system shall record important user activities.
+Examples:
+User login
+Asset creation
+Asset update
+Asset assignment
+Asset dispatch
+Maintenance completion / dispatch back
+Maintenance update
+User creation
+Status change
+Audit records shall include:
+User
+Action
+Date and time
+Affected record
+IP address where applicable
+9. ASSET LIFECYCLE
+The system shall support the following general lifecycle:
+Received
+   ↓
+Registered
+   ↓
+Inspected
+   ↓
+Available
+   ↓
+Assigned
+   ↓
+Dispatched
+   ↓
+Received by Branch
+   ↓
+In Use
+   ↓
+ ┌───────────────┐
+ │               │
+Normal Use    Problem
+ │               │
+ │               ↓
+ │          Maintenance
+ │               ↓
+ │          Repaired
+ │               ↓
+└──────→ Available / Reassigned
+                 ↓
+Retired/Disposed
+10. BUSINESS RULES
+BR-01 Unique Asset Identification
+Every asset shall have a unique CBE Asset Tag Number.
+BR-02 Unique Serial Number
+The system should prevent duplicate serial numbers where the organization's asset policy requires uniqueness.
+BR-03 Asset Status
+An asset cannot have conflicting active statuses.
+For example, an asset marked "Under Maintenance" should not simultaneously be marked "Available".
+BR-04 Assignment
+An asset should not be actively assigned to two different employees at the same time.
+BR-05 Dispatch
+An asset must exist in the system before it can be dispatched.
+BR-06 Maintenance
+Maintenance requests must be linked to an existing asset, and each maintenance request shall have one associated maintenance record.
+BR-07 Dispatch Receipt Confirmation
+A dispatched asset shall be confirmed by the destination receiver before it becomes fully active at the destination.
+BR-08 Maintenance Completion
+Equipment completing maintenance shall have its condition and maintenance result recorded before it is dispatched back or made available for reassignment.
+BR-09 Authorization
+Only authorized users can perform sensitive operations.
+BR-10 Auditability
+Important asset changes must be recorded in the audit log.
+11. USE CASES
+
+UC-01 Login
+Actor: All users
+Description: User logs into the system.
+Main Flow:
+User enters username/email and password.
+System validates credentials.
+System identifies the user's role.
+System displays the appropriate dashboard.
+UC-02 Register Asset
+Actor: IT Inventory Officer
+Main Flow:
+IT Inventory Officer selects Register Asset.
+Enters hardware information.
+System validates the information.
+System checks duplicate tag/serial number.
+System saves the asset.
+System assigns the asset an inventory status.
+UC-03 Dispatch and Confirm Receipt
+Actor: IT Inventory Officer
+IT Inventory Officer selects an available asset.
+Enters destination and receiver information.
+Receiver signature is captured.
+System records dispatch.
+Asset status changes to In Transit.
+Destination confirms receipt.
+Asset status changes accordingly.
+UC-04 Report Hardware Problem
+Actor: Branch Manager
+Branch Manager selects an asset.
+Enters problem description.
+Selects priority.
+Submits report.
+System creates maintenance request.
+Authorized technician receives the task.
+UC-05 Maintain Equipment
+Actor: Technician
+Technician opens assigned maintenance request.
+Inspects equipment.
+Records diagnosis.
+Performs repair.
+Records repair action.
+Updates maintenance status.
+Completes maintenance.
+System updates asset history.
+UC-06 Generate Report
+Actor: Administrator / Authorized Manager
+User selects report type.
+Applies filters.
+System retrieves data.
+System generates report.
+User views or exports the report.
+12. DATABASE REQUIREMENTS
+The proposed database shall use a relational database model. It is designed to track IT hardware assets, assignments, dispatches, maintenance, and history. It does not model warehouse stock, purchasing, payment, returns, transfers, or warranty management as separate database entities.
+Main entities include:
+Users
+Roles
+Branches
+Assets
+AssetTypes
+Assignments
+Dispatches
+MaintenanceRecords
+MaintenanceRequests
+Attachments
+AuditLogs
+Notifications
+13. PROPOSED DATABASE STRUCTURE
+Users
+user_id PK
+full_name
+employee_id
+phone
+email
+password_hash
+role_id FK
+branch_id FK
+status
+created_at
+updated_at
+Roles
+role_id PK
+role_name
+description
+Branches
+branch_id PK
+branch_code
+branch_name
+manager_id FK
+contact_person
+phone
+location
+Assets
+asset_id PK
+tag_no UNIQUE
+serial_no
+asset_type_id FK
+model
+ws_no
+condition
+description
+status
+current_branch_id FK
+created_at
+updated_at
+Asset Types
+asset_type_id PK
+type_name
+description
+Assignments
+assignment_id PK
+asset_id FK
+employee_id
+employee_name
+branch_id FK
+assigned_date
+returned_date
+assigned_by FK
+status
+Dispatches
+dispatch_id PK
+asset_id FK
+source_location
+destination_branch_id FK
+receiver_name
+receiver_id
+receiver_phone
+receiver_signature
+dispatched_date
+status
+Maintenance Requests
+request_id PK
+asset_id FK
+reported_by FK
+branch_id FK
+problem_description
+priority
+status
+reported_date
+Maintenance Records
+maintenance_id PK
+request_id FK UNIQUE
+technician_id FK
+diagnosis
+repair_action
+parts_used
+start_date
+completion_date
+remarks
+status
+Attachments
+attachment_id PK
+asset_id FK
+file_name
+file_path
+file_type
+uploaded_by FK
+uploaded_at
+Audit Logs
+audit_id PK
+user_id FK
+action
+entity_type
+entity_id
+description
+ip_address
+created_at
+Notifications
+notification_id PK
+user_id FK
+title
+message
+type
+is_read
+created_at
+14. RELATIONSHIPS
+The major relationships are:
+Roles 1:M Users
+Branches 1:M Users
+Branches 1:M Assets
+AssetTypes 1:M Assets
+Assets 1:M Assignments
+Branches 1:M Assignments
+Users 1:M Assignments (assigned_by)
+Assets 1:M Dispatches
+Branches 1:M Dispatches (destination_branch_id)
+Assets 1:M MaintenanceRequests
+Branches 1:M MaintenanceRequests
+Users 1:M MaintenanceRequests (reported_by)
+MaintenanceRequests 1:1 MaintenanceRecords
+Users 1:M MaintenanceRecords (technician_id)
+Assets 1:M Attachments
+Users 1:M Attachments (uploaded_by)
+Users 1:M Notifications
+Users 1:M AuditLogs
+Branches 1:1 Users (branch manager, where manager_id is used)
+This structure keeps asset history distributed across assignments, dispatches, maintenance, attachments, and audit records instead of placing every activity in one large transaction table.
+15. NON-FUNCTIONAL REQUIREMENTS
+NFR-01 Security
+The system shall:
+Require authentication.
+Use role-based access control.
+Protect user passwords using secure password hashing.
+Restrict unauthorized access.
+Validate user input.
+Protect sensitive information.
+Record important security-related activities.
+NFR-02 Performance
+The system should provide normal operations such as searching, viewing, and updating assets within an acceptable response time under normal network conditions.
+NFR-03 Availability
+The system should be available to authorized users during the organization's operating hours.
+NFR-04 Usability
+The interface shall:
+Be simple to understand.
+Use clear navigation.
+Provide appropriate forms.
+Provide validation messages.
+Use dashboards according to user roles.
+NFR-05 Reliability
+The system shall maintain data consistency during asset transactions.
+For example, an asset should not be marked as available if it is currently being dispatched.
+NFR-06 Maintainability
+The system shall use a modular architecture so that future features can be added without major changes to existing modules.
+NFR-07 Scalability
+The system should be capable of supporting increasing numbers of:
+Assets
+Branches
+Users
+Maintenance records
+Transactions
+NFR-08 Backup and Recovery
+The database should be backed up regularly.
+The system administrator should have procedures for restoring data in case of data loss.
+NFR-09 Auditability
+Important changes to inventory records shall be traceable to the user who performed the action.
+NFR-10 Compatibility
+The web application should work with modern browsers such as:
+Google Chrome
+Microsoft Edge
+Mozilla Firefox
+16. SYSTEM ARCHITECTURE
+The proposed system will use a three-tier architecture.
+┌─────────────────────────────┐
+│       Presentation Layer    │
+│                             │
+│ Next.js / React / TypeScript│
+└──────────────┬──────────────┘
+               │
+               ↓
+┌─────────────────────────────┐
+│       Application Layer     │
+│                             │
+│ NestJS REST API             │
+│ Business Logic              │
+│ Authentication / RBAC       │
+└──────────────┬──────────────┘
+               │
+               ↓
+┌─────────────────────────────┐
+│          Data Layer         │
+│                             │
+│ PostgreSQL + Prisma ORM     │
+└─────────────────────────────┘
+17. TECHNOLOGY STACK
+Frontend
+Next.js
+React
+TypeScript
+Tailwind CSS
+React Hook Form
+Zod
+Axios
+Backend
+NestJS
+TypeScript
+REST API
+JWT Authentication
+Role-Based Access Control
+Database
+PostgreSQL
+Prisma ORM
+Development Tools
+Visual Studio Code
+Git
+GitHub
+Postman
+Prisma Studio
+pgAdmin
+Reporting
+PDF generation
+Excel export
+File Management
+The internship version may use local or server storage for attachments. A cloud/object storage solution can be introduced later if required.
+18. SYSTEM MODULES
+The application will contain the following major modules:
+1. Authentication
+2. Dashboard
+3. User Management
+4. Branch Management
+5. Asset Management
+6. IT Asset Inventory and Tracking
+7. Assignment Management
+8. Dispatch and Receipt Confirmation
+9. Maintenance Management
+10. Hardware Problem Reporting
+11. Reports
+12. Notifications
+13. Audit Logs
+14. Attachment Management
+19. DASHBOARD DESIGN
+Administrator
+Total Assets
+Total Branches
+Total Users
+Available Assets
+Assigned Assets
+Under Maintenance
+Damaged Assets
+Recent Activities
+IT Inventory Officer
+Available Inventory
+Pending Requests
+Recent Dispatches
+Equipment in Transit
+Technician
+Assigned Maintenance
+Pending Inspection
+Under Repair
+Completed Maintenance
+Branch Manager
+Branch Assets
+Assigned Equipment
+Pending Requests
+Equipment in Transit
+Maintenance Requests
+20. REPORTS
+The system should provide:
+Asset Report
+Tag No
+Serial No
+Asset Type
+Model
+Branch
+Condition
+Status
+Assigned Person
+Branch Inventory Report
+Branch
+Asset Type
+Quantity
+Status
+Condition
+Maintenance Report
+Asset
+Problem
+Technician
+Start Date
+Completion Date
+Status
+Diagnosis / Resolution
+Parts / Materials Used
+Recommended Material / Model (when applicable)
+Asset Movement Report
+Asset
+Source
+Destination
+Dispatched Date
+Receiver
+Status
+Assignment History
+21. QR CODE / BARCODE
+As an optional feature, the system can generate a QR code or barcode for each CBE asset.
+The code can contain or reference:
+CBE Asset Tag
+Asset ID
+When scanned, an authorized user can quickly access the asset record.
+This feature is useful for:
+Inventory checking
+Asset identification
+Maintenance
+Assignment
+Physical verification
+For an internship, I would classify this as an optional enhancement, not a core requirement.
+22. SECURITY AND ACCESS CONTROL
+The system shall use Role-Based Access Control.
+Example:
+Function
+Admin
+IT Inventory Officer
+Technician
+Branch Manager
+Manage Users
+✓
+
+
+
+Register Asset
+✓
+✓
+
+
+Update Asset
+✓
+✓
+Limited
+
+Assign Asset
+✓
+✓
+
+
+Dispatch
+✓
+✓
+
+
+Confirm Receipt
+✓
+✓
+
+✓
+Maintenance
+✓
+
+✓
+
+Report Hardware Problem
+✓
+✓
+✓
+✓
+Reports
+✓
+✓
+✓
+Branch
+Audit Logs
+✓
+
+
+
+Branch Management
+✓
+
+
+
+This table can later be refined based on your instructor's feedback.
+23. DATA VALIDATION
+The system shall validate:
+Required fields.
+Unique CBE Tag Number.
+Valid Serial Number.
+Valid employee ID.
+Valid phone number.
+Valid dates.
+Valid status transitions.
+Valid file types for attachments.
+File size limits.
+Required receiver information during dispatch.
+24. STATUS TRANSITIONS
+A typical asset status flow will be:
+Available
+↓
+Assigned
+↓
+In Transit
+↓
+Assigned / In Use
+↓
+Under Maintenance
+↓
+Repaired
+↓
+Available / Assigned
+Other possible states:
+Damaged
+Lost
+Retired
+Disposed
+The system shall prevent invalid status changes where appropriate.
+25. ASSUMPTIONS
+The project assumes that:
+Authorized users have valid employee information.
+Each asset has an identifiable CBE tag or serial number.
+Branch information is available.
+Users have access to the web application.
+An asset may temporarily have no current branch while it is with the IT/inventory team for maintenance.
+Hardware maintenance information can be entered by authorized technicians.
+The branch will provide the required information for initial data migration.
+The final workflow will be validated with the responsible CBE personnel.
+26. CONSTRAINTS
+Possible constraints include:
+Limited access to actual CBE internal systems.
+Limited access to production data.
+Banking security and privacy requirements.
+Limited internship development time.
+Limited access to real hardware during development.
+Requirement to avoid exposing sensitive CBE information.
+System integration with existing CBE systems is outside the initial project scope.
+27. FUTURE ENHANCEMENTS
+Future versions could include:
+Integration with existing CBE IT systems.
+Mobile application.
+QR/barcode scanning using mobile devices.
+Maintenance reminders and service notifications.
+Email/SMS notifications.
+Advanced analytics.
+Predictive maintenance.
+Automated inventory reconciliation.
+Integration with procurement systems.
+Integration with enterprise Incident Management.
+Cloud-based deployment.
+Advanced approval workflows.
+These features are not required for the first internship version.
+28. PROJECT SCOPE PRIORITY
+To keep the project achievable, divide the requirements into three levels.
+Core Requirements
+These should definitely be implemented:
+Authentication
+Role management
+Branch management
+IT asset registration and identification
+IT asset inventory and tracking
+Asset assignment
+Dispatch and receipt confirmation
+Maintenance
+Hardware problem reporting
+Search
+Reports
+Audit logs
+Attachment management
+Secondary Requirements
+Implement if time permits:
+Notifications
+Digital signatures
+Advanced dashboards
+Excel/PDF export
+Material/specification recommendations for maintenance needs
+Optional Enhancements
+QR/barcode
+Mobile application
+Email/SMS
+Advanced analytics
+External system integration
+Integration with procurement systems
+29. EXPECTED BENEFITS
+The proposed system is expected to:
+Reduce manual record keeping.
+Reduce dependency on Excel.
+Improve inventory accuracy.
+Improve asset accountability.
+Make asset searching faster.
+Improve maintenance tracking.
+Provide complete asset history.
+Improve visibility of branch inventory.
+Simplify reporting.
+Reduce paperwork.
+Improve management decision-making.
+30. CONCLUSION
+The CBE IT Hardware Inventory Management System will provide a centralized solution for managing the lifecycle of IT hardware assets.
+The system will replace fragmented manual inventory processes with a structured digital platform that supports asset registration, assignment, dispatch and receipt confirmation, maintenance, hardware problem reporting, asset movement, reporting, and auditing.
+The system is intentionally focused on IT hardware inventory and hardware-related maintenance rather than attempting to replace the organization's complete IT Incident Management or IT Service Management platform.
+The proposed architecture using a web-based frontend, RESTful backend, and relational database will provide a maintainable and scalable foundation for future expansion.
