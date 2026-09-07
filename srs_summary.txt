@@ -1,0 +1,168 @@
+
+SOFTWARE REQUIREMENTS SPECIFICATION (SRS) SUMMARY
+CBE Inventory  Management System
+
+Prepared by:Firomsa Tesfaye  
+Sura Abraham
+
+
+
+
+1. Introduction
+1.1 Purpose of the System
+The purpose of this system is to digitize and improve the management of IT hardware assets and their maintenance activities, which are currently handled through manual, paper-based, and Microsoft Excel records. It provides a centralized platform for registering, tracking, assigning, dispatching, receiving, maintaining, and monitoring IT hardware assets across branches and IT support locations.
+1.2 Background
+Currently, hardware inventory information at CBE branches is maintained using Microsoft Excel and physical files. This makes it difficult to:
+Obtain centralized and real-time information.
+Search records as asset volume increases.
+Track equipment dispatch, receipts, and maintenance history.
+Determine current asset locations or responsible personnel quickly.
+1.3 Objectives
+The main objectives of the CBE IT Hardware Inventory Management System include:
+Digitizing IT hardware records and reducing Excel/paper dependence.
+Tracking the complete lifecycle of hardware assets.
+Improving accountability for hardware movement and assignments.
+Managing and maintaining hardware maintenance history.
+Generating inventory and maintenance reports with search and filter capabilities.
+
+2. System Scope
+2.1 What the System Does
+The system manages the lifecycle of IT hardware from registration and deployment through assignment, dispatch, maintenance, reassignment, retirement, or disposal. It supports asset identification, technical inspection, hardware problem reporting, and audit logging.
+2.2 What Problems it Solves
+By transitioning to a centralized web-based database, the system solves the problem of decentralized records, missing maintenance histories, unverified equipment receipts, and slow manual report generation. It ensures every IT hardware asset is explicitly linked to its location, current status, and responsible person.
+2.3 System Boundaries
+Included in Scope
+Not Included in Scope
+Hardware registration & inventory
+Full CBE enterprise Incident Management
+Asset identification & assignment
+Full IT Service Management
+Equipment dispatch & receipt
+Financial accounting or procurement payment
+Hardware maintenance & problem reporting
+Employee payroll or network monitoring
+User management & audit logging
+Complete customer relationship management
+
+
+3. Overall System Description
+3.1 System Overview
+The proposed system is a centralized web-based application built on a three-tier architecture (Next.js frontend, NestJS API, PostgreSQL database). It allows users to track the entire asset workflow: from initial receipt and technical inspection, to branch assignment, maintenance loops, and eventual retirement.
+3.2 Major Modules / Features
+Authentication & User Management
+Dashboard & Reporting
+Branch Management
+Asset Registration & Inventory Tracking
+Assignment & Dispatch Management
+Maintenance & Problem Reporting
+Audit Logs & Attachment Management
+3.3 Users and Roles
+The system implements Role-Based Access Control (RBAC) to restrict features based on the user's responsibilities. The primary roles are the System Administrator, IT Inventory Officer, Hardware Technician, and Branch Manager.
+
+4. User Roles / Actors
+The following actors interact with the system:
+Role
+Responsibility
+System Administrator
+Responsible for system configuration, managing user accounts, assigning roles, permissions, branch information, and viewing system-wide audit logs.
+IT Inventory Officer
+Responsible for registering hardware, managing asset tag numbers, dispatching equipment, recording receipts, verifying maintenance results, and managing the overall inventory.
+Hardware Technician
+Responsible for technical inspections, hardware maintenance, diagnosing problems, repairing assets, installing software, and logging technical evaluation reports.
+Branch Manager
+Responsible for requesting equipment, confirming receipt of dispatched equipment, monitoring branch hardware, and reporting hardware problems.
+
+
+5. Use Case Model
+The system operations are structured around the primary interactions between the actors and the application. The major use cases include:
+Actor
+Major Use Cases
+All Users
+Login securely and view role-specific dashboards.
+System Administrator
+Manage Users and Roles, Generate System Reports, View Audit History.
+IT Inventory Officer
+Register and Manage Assets, Assign Equipment, Dispatch Equipment, Confirm Receipt, Generate Inventory Reports.
+Branch Manager
+Request Maintenance, Report Hardware Problems, Confirm Equipment Receipt, View Branch Hardware.
+IT Technician
+Perform Maintenance (Inspection, Repair, Software Installation, Security Configuration), Update Maintenance Status.
+
+
+6. Functional Requirements Summary
+The functional requirements define the core behaviors of the system.
+6.1 User & Branch Management
+The system shall securely authenticate users and provide role-based access. Administrators can create, update, and deactivate users, as well as manage branch location profiles.
+6.2 Asset Management
+Authorized users can register hardware with unique CBE Asset Tag Numbers to prevent duplicates. The system records asset attributes (e.g., serial number, model, condition) and maintains real-time status tracking (Available, Assigned, In Transit, Under Maintenance, etc.).
+6.3 Assignment Management
+The system manages the assignment of equipment to employees or branches. It logs the assignment date, the responsible individual, and retains previous assignment history.
+6.4 Dispatch & Receipt Process
+Users can dispatch equipment to a destination branch. The system tracks receiver details and captures receipt confirmations directly within the dispatch workflow, changing the asset status accordingly.
+
+6.5 Maintenance Management
+The system handles the entire maintenance loop:
+Problem Reporting: Branch Managers log hardware issues directly tied to a specific asset.
+Technical Inspection: Technicians record diagnosis, required parts, software/OS installations, and security checks.
+History: Every maintenance action is permanently appended to the asset's historical record.
+6.6 Reporting & Dashboards
+Users receive customized dashboards displaying relevant metrics (e.g., pending requests, assets in transit). The system generates exportable PDF/Excel reports covering inventory counts, maintenance histories, and dispatch logs.
+6.7 Other Functions
+Search and Filtering: Advanced search by tag, serial, branch, or status.
+Attachment Management: Uploading supporting documents (e.g., repair proofs, receiver signatures).
+Audit Logging: Tracing critical data modifications to the specific user and IP address.
+
+7. Non-Functional Requirements Summary
+Category
+Requirement
+Security
+Role-based access control, encrypted passwords, session management, and comprehensive audit trails for sensitive actions.
+Performance
+Acceptable response times for querying, viewing, and updating asset records under normal network conditions.
+Usability
+Clear navigation, role-tailored dashboards, proper form validation, and simple interfaces.
+Reliability
+Ensures data consistency (e.g., preventing an asset from being simultaneously 'Available' and 'In Transit').
+Maintainability
+Modular architecture to allow seamless addition of future features.
+Other
+Scalable database for growing asset volumes, routine backup procedures, and compatibility with modern web browsers.
+
+
+8. Business Rules and Constraints
+8.1 Business Rules
+BR-01: Every asset shall have a strictly unique CBE Asset Tag Number.
+BR-03: An asset cannot possess conflicting active statuses.
+BR-04: Equipment cannot be actively assigned to two different employees simultaneously.
+BR-05: An asset must be officially registered in the system before it can be dispatched.
+BR-06: Maintenance requests must be linked directly to an existing registered asset.
+BR-07: A dispatched asset requires destination confirmation before it becomes fully active at that location.
+BR-08: Equipment exiting maintenance must have a technical evaluation and condition logged before reassignment.
+8.2 Constraints & Assumptions
+Assumption: Authorized users possess valid employee IDs, and branches will supply initial data for migration.
+Constraint: The system will not integrate with core CBE financial or enterprise banking systems initially.
+Constraint: Access to production data and real hardware during the initial development/internship phase is limited.
+
+9. Database Overview
+The system relies on a structured relational database optimized for tracking lifecycle transitions without duplicating data. Key entities include:
+Database Entity
+Purpose
+Users & Roles
+Manages authentication credentials and role-based permissions.
+Branches
+Stores organizational locations and manager associations.
+Assets & AssetTypes
+Core catalog of hardware, storing tags, serial numbers, and current physical status.
+Assignments
+Logs historical and active relationships between assets and responsible personnel.
+Dispatches
+Tracks the physical transit of equipment from source to destination, including receipt signatures.
+Maintenance (Requests & Records)
+Records branch-reported problems alongside technician diagnostic and repair actions.
+AuditLogs & Attachments
+Secures compliance trails and stores external technical or signature documents.
+
+
+10. Conclusion
+The CBE IT Hardware Inventory Management System is designed to replace fragmented, manual Excel and paper-based inventory workflows with a secure, centralized digital platform. By focusing strictly on IT hardware lifecycles, it ensures accurate asset registration, transparent dispatch tracking, and comprehensive maintenance logging.
+The resulting system will significantly improve asset accountability, reduce lost maintenance histories, streamline reporting processes, and provide management with real-time visibility into the organization's technological infrastructure.
