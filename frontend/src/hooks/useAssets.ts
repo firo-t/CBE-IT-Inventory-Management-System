@@ -1,0 +1,2 @@
+import {useCallback,useState} from "react"; import {api} from "@/lib/api"; import type {Asset} from "@/types/asset";
+export function useAssets(){const [assets,setAssets]=useState<Asset[]>([]); const [loading,setLoading]=useState(false); const fetchAssets=useCallback(async()=>{setLoading(true);try{const r=await api.get<Asset[]>("/assets");setAssets(r.data)}finally{setLoading(false)}},[]);return {assets,loading,fetchAssets};}

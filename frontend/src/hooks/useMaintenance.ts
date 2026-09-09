@@ -1,0 +1,2 @@
+import {useCallback,useState} from "react"; import {api} from "@/lib/api"; import type {MaintenanceRequest} from "@/types/maintenance";
+export function useMaintenance(){const [requests,setRequests]=useState<MaintenanceRequest[]>([]);const fetchRequests=useCallback(async()=>{const r=await api.get<MaintenanceRequest[]>("/maintenance/requests");setRequests(r.data)},[]);return {requests,fetchRequests};}

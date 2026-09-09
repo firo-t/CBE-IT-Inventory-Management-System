@@ -1,0 +1,1 @@
+export default function BranchInventoryChart(){return <div className="flex h-48 items-end gap-5 border-b border-slate-200 px-4 pb-1">{[62,85,48,72,92,55,70].map((v,i)=><div key={i} className="flex flex-1 flex-col items-center gap-2"><div className="w-full rounded-t bg-[#c2185b]" style={{height:`${v}%`}}/><span className="text-[10px] text-slate-500">B{i+1}</span></div>)}</div>}

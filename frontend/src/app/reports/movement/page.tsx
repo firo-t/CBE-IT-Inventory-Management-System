@@ -1,0 +1,1 @@
+'use client';import DashboardLayout from '@/components/layout/DashboardLayout';import ReportPage from '@/components/ui/ReportPage';export default function P(){return <DashboardLayout><ReportPage title="Movement & Dispatch Reports" endpoint="/reports/dispatches"/></DashboardLayout>}

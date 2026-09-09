@@ -1,0 +1,1 @@
+export default function DispatchTable(){return <div className="rounded-lg border border-dashed border-slate-300 p-5 text-sm text-slate-500">DispatchTable component</div>}

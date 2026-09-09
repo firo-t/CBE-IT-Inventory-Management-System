@@ -1,0 +1,1 @@
+export default function MaintenanceChart(){return <div className="flex h-48 items-end gap-3">{[35,55,42,75,60,88,70,95,64,80,58,73].map((v,i)=><div key={i} className="flex flex-1 flex-col justify-end"><div className="rounded-t bg-[#c2185b]" style={{height:`${v}%`}}/></div>)}</div>}
