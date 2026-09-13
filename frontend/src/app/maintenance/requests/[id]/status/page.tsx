@@ -10,7 +10,7 @@ export default function UpdateMaintenanceStatus() {
   const params = useParams();
   const router = useRouter();
 
-  const [status, setStatus] = useState('IN_PROGRESS');
+  const [status, setStatus] = useState('REPORTED');
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
 
@@ -52,10 +52,21 @@ export default function UpdateMaintenanceStatus() {
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
               >
-                <option value="PENDING">PENDING</option>
-                <option value="IN_PROGRESS">IN_PROGRESS</option>
-                <option value="COMPLETED">COMPLETED</option>
-                <option value="CANCELLED">CANCELLED</option>
+                {[
+                  'REPORTED',
+                  'RECEIVED',
+                  'ASSIGNED',
+                  'UNDER_INSPECTION',
+                  'UNDER_REPAIR',
+                  'WAITING_FOR_PARTS',
+                  'REPAIRED',
+                  'COMPLETED',
+                  'CLOSED',
+                ].map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
               </select>
             </div>
 
