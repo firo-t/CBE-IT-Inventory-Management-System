@@ -113,6 +113,14 @@ export class AssignmentsService {
       where.status = query.status;
     }
 
+    if (query.search) {
+      where.OR = [
+        { employee_id: { contains: query.search, mode: 'insensitive' } },
+        { employee_name: { contains: query.search, mode: 'insensitive' } },
+        { asset: { tag_no: { contains: query.search, mode: 'insensitive' } } },
+      ];
+    }
+
     return this.prisma.assignment.findMany({
       where,
       orderBy: { assigned_date: 'desc' },

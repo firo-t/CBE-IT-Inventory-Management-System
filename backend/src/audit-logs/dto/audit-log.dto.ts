@@ -16,4 +16,8 @@ export class AuditLogQueryDto {
   @IsString()
   @IsOptional()
   entity_id?: string;
+
+  @IsString()
+  @IsOptional()
+  search?: string;
 }

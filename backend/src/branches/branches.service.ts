@@ -56,8 +56,17 @@ export class BranchesService {
     return branch;
   }
 
-  async findAll() {
+  async findAll(search?: string) {
+    const where: any = {};
+    if (search) {
+      where.OR = [
+        { branch_name: { contains: search, mode: 'insensitive' } },
+        { branch_code: { contains: search, mode: 'insensitive' } },
+        { location: { contains: search, mode: 'insensitive' } },
+      ];
+    }
     return this.prisma.branch.findMany({
+      where,
       include: {
         manager: {
           select: {

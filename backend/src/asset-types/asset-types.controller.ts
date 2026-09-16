@@ -19,8 +19,8 @@ export class AssetTypesController {
 
   @Roles('System Administrator / Admin', 'IT Inventory Officer', 'Branch Manager')
   @Get()
-  findAll() {
-    return this.assetTypesService.findAll();
+  findAll(@Query('search') search?: string) {
+    return this.assetTypesService.findAll(search);
   }
 
   @Get(':id')

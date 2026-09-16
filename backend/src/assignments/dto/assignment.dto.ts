@@ -27,4 +27,8 @@ export class AssignmentQueryDto {
   @IsEnum(AssignmentStatus)
   @IsOptional()
   status?: AssignmentStatus;
+
+  @IsString()
+  @IsOptional()
+  search?: string;
 }

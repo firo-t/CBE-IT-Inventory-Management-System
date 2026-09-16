@@ -9,9 +9,10 @@ export default function Branches() {
     <DashboardLayout>
       <CrudPage
         title="Branches"
-        description="Manage CBE branches and locations."
+        description="Manage bank branches and locations."
         endpoint="/branches"
         createHref="/branches/create"
+        searchPlaceholder="Search by branch name, code, or location..."
         columns={[
           { key: 'branch_code', label: 'Code' },
           { key: 'branch_name', label: 'Branch' },

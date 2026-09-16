@@ -57,6 +57,12 @@ export class AuditLogsService {
     if (query.action) where.action = query.action;
     if (query.entity_type) where.entity_type = query.entity_type;
     if (query.entity_id) where.entity_id = query.entity_id;
+    if (query.search) {
+      where.OR = [
+        { action: { contains: query.search, mode: 'insensitive' } },
+        { entity_id: { contains: query.search, mode: 'insensitive' } },
+      ];
+    }
 
     return this.prisma.auditLog.findMany({
       where,

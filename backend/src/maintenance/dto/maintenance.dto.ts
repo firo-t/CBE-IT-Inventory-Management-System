@@ -80,4 +80,8 @@ export class MaintenanceQueryDto {
   @IsEnum(MaintenancePriority)
   @IsOptional()
   priority?: MaintenancePriority;
+
+  @IsString()
+  @IsOptional()
+  search?: string;
 }

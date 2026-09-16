@@ -19,8 +19,8 @@ export class BranchesController {
 
   @Roles('System Administrator / Admin', 'IT Inventory Officer', 'Branch Manager')
   @Get()
-  findAll() {
-    return this.branchesService.findAll();
+  findAll(@Query('search') search?: string) {
+    return this.branchesService.findAll(search);
   }
 
   @Get(':id')

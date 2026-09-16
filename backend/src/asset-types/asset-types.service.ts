@@ -31,8 +31,15 @@ export class AssetTypesService {
     return assetType;
   }
 
-  async findAll() {
-    return this.prisma.assetType.findMany();
+  async findAll(search?: string) {
+    const where: any = {};
+    if (search) {
+      where.OR = [
+        { type_name: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+    return this.prisma.assetType.findMany({ where });
   }
 
   async findOne(id: string) {

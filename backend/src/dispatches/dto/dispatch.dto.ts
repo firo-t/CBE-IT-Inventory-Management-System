@@ -35,4 +35,8 @@ export class DispatchQueryDto {
   @IsEnum(DispatchStatus)
   @IsOptional()
   status?: DispatchStatus;
+
+  @IsString()
+  @IsOptional()
+  search?: string;
 }

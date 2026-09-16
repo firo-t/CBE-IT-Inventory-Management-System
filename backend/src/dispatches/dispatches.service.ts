@@ -107,6 +107,14 @@ export class DispatchesService {
       where.status = query.status;
     }
 
+    if (query.search) {
+      where.OR = [
+        { receiver_name: { contains: query.search, mode: 'insensitive' } },
+        { receiver_id: { contains: query.search, mode: 'insensitive' } },
+        { asset: { tag_no: { contains: query.search, mode: 'insensitive' } } },
+      ];
+    }
+
     return this.prisma.dispatch.findMany({
       where,
       orderBy: { dispatched_date: 'desc' },

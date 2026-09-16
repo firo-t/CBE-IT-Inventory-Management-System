@@ -9,9 +9,10 @@ export default function Users() {
     <DashboardLayout>
       <CrudPage
         title="Users"
-        description="Manage system users, roles and account status."
+        description="Manage system users and access roles."
         endpoint="/users"
         createHref="/users/create"
+        searchPlaceholder="Search by name, email, or employee ID..."
         columns={[
           { key: 'full_name', label: 'Name' },
           { key: 'employee_id', label: 'Employee ID' },

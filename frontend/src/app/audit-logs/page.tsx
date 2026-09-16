@@ -9,8 +9,9 @@ export default function Audit() {
     <DashboardLayout>
       <CrudPage
         title="Audit Logs"
-        description="Administrator-only record of system actions."
+        description="View system activity and history."
         endpoint="/audit-logs"
+        searchPlaceholder="Search by action or entity ID..."
         columns={[
           { key: 'id', label: 'ID' },
           { key: 'user_id', label: 'User' },

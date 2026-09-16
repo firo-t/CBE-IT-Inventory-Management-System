@@ -108,6 +108,12 @@ export class MaintenanceService {
     if (query.asset_id) where.asset_id = query.asset_id;
     if (query.status) where.status = query.status;
     if (query.priority) where.priority = query.priority;
+    if (query.search) {
+      where.OR = [
+        { problem_description: { contains: query.search, mode: 'insensitive' } },
+        { asset: { tag_no: { contains: query.search, mode: 'insensitive' } } },
+      ];
+    }
 
     // Role-based scoping
     if (user.role === 'Branch Manager') {
