@@ -14,7 +14,7 @@ export default function Edit() {
   const p = useParams();
   const [assetTypes, setAssetTypes] = useState([]);
   const [branches, setBranches] = useState([]);
-  const [initialData, setInitialData] = useState(null);
+  const [initialData, setInitialData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 

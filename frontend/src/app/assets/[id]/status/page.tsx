@@ -11,7 +11,7 @@ const ASSET_STATUSES = [
 
 export default function UpdateStatus() {
   const p = useParams();
-  const [initialData, setInitialData] = useState(null);
+  const [initialData, setInitialData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 

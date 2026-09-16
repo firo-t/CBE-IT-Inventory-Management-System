@@ -4,6 +4,7 @@ export type User = {
   role: string;
   employeeId?: string;
   branchId?: string;
+  branchName?: string;
   fullName: string;
   phone?: string;
   status?: string;

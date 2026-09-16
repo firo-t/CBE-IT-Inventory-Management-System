@@ -2,8 +2,10 @@
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import FormShell from '@/components/ui/FormShell';
 import { useParams } from 'next/navigation';
+import { useRoleGuard } from '@/hooks/useRoleGuard';
 
 export default function EditAssetType() {
+  useRoleGuard(['ADMIN']);
   const p = useParams();
   return (
     <DashboardLayout>

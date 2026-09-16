@@ -2,8 +2,10 @@
 
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import FormShell from '@/components/ui/FormShell';
+import { useRoleGuard } from '@/hooks/useRoleGuard';
 
 export default function Create() {
+  useRoleGuard(['ADMIN']);
   return (
     <DashboardLayout>
       <FormShell

@@ -22,14 +22,14 @@ export class AssignmentsController {
 
   @Roles('System Administrator / Admin', 'IT Inventory Officer', 'Branch Manager', 'Hardware Technician')
   @Get()
-  findAll(@Query() query: AssignmentQueryDto) {
-    return this.assignmentsService.findAll(query);
+  findAll(@Query() query: AssignmentQueryDto, @CurrentUser() user: any) {
+    return this.assignmentsService.findAll(query, user);
   }
 
   @Roles('System Administrator / Admin', 'IT Inventory Officer', 'Branch Manager', 'Hardware Technician')
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.assignmentsService.findOne(id);
+  findOne(@Param('id') id: string, @CurrentUser() user: any) {
+    return this.assignmentsService.findOne(id, user);
   }
 
   @Roles('System Administrator / Admin', 'IT Inventory Officer')

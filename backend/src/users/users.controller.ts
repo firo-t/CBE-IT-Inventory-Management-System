@@ -17,14 +17,19 @@ export class UsersController {
     return this.usersService.create(createUserDto, user);
   }
 
+  @Roles('System Administrator / Admin', 'Branch Manager', 'IT Inventory Officer')
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(
+    @Query('search') search: string | undefined, 
+    @Query('role') role: string | undefined,
+    @CurrentUser() user: any
+  ) {
+    return this.usersService.findAll(search, role, user);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+  findOne(@Param('id') id: string, @CurrentUser() user: any) {
+    return this.usersService.findOne(id, user);
   }
 
   @Patch(':id')

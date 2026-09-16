@@ -31,12 +31,12 @@ const rowId = (row: any) =>
   row?.id ||
   row?.user_id ||
   row?.userId ||
-  row?.asset_id ||
-  row?.branch_id ||
   row?.assignment_id ||
   row?.dispatch_id ||
   row?.request_id ||
   row?.maintenance_id ||
+  row?.asset_id ||
+  row?.branch_id ||
   row?.asset_type_id;
 
 const display = (v: any) => {

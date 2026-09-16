@@ -3,8 +3,10 @@
 
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import CrudPage from '@/components/ui/CrudPage';
+import { useRoleGuard } from '@/hooks/useRoleGuard';
 
 export default function AssetTypes() {
+  useRoleGuard(['ADMIN']);
   return (
     <DashboardLayout>
       <CrudPage

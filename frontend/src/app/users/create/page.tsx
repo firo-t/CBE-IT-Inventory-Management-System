@@ -3,8 +3,10 @@ import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import FormShell from '@/components/ui/FormShell';
 import { api } from '@/lib/api';
+import { useRoleGuard } from '@/hooks/useRoleGuard';
 
 export default function Create() {
+  useRoleGuard(['ADMIN']);
   const [roles, setRoles] = useState([]);
   const [branches, setBranches] = useState([]);
 

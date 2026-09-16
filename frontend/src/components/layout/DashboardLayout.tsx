@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 import {
   LayoutDashboard,
@@ -76,7 +77,15 @@ export default function DashboardLayout({
       <aside className={`sidebar ${open ? 'open' : ''}`}>
 
         <div className="brand">
-          <div className="logo">C</div>
+          <div className="logo" style={{ padding: 0, overflow: 'hidden', background: 'transparent', border: 'none' }}>
+            <Image
+              src="/cbe-logo.png"
+              alt="CBE"
+              width={36}
+              height={36}
+              style={{ borderRadius: '50%', objectFit: 'contain', background: '#fff', padding: 2 }}
+            />
+          </div>
 
           <div>
             <div>CBE INVENTORY</div>
@@ -161,6 +170,7 @@ export default function DashboardLayout({
             <span className="muted">
               {' · '}
               {u?.role || 'User'}
+              {u?.role === 'Branch Manager' && u?.branchName ? ` · ${u.branchName}` : ''}
             </span>
           </div>
 

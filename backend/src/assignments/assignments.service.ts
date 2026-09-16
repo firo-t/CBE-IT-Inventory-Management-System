@@ -102,8 +102,12 @@ export class AssignmentsService {
     });
   }
 
-  async findAll(query: AssignmentQueryDto) {
+  async findAll(query: AssignmentQueryDto, user?: any) {
     const where: Prisma.AssignmentWhereInput = {};
+
+    if (user && user.role === 'Branch Manager' && user.branchId) {
+      where.branch_id = user.branchId;
+    }
 
     if (query.status) {
       where.status = query.status;
@@ -127,7 +131,7 @@ export class AssignmentsService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, user?: any) {
     const assignment = await this.prisma.assignment.findUnique({
       where: { assignment_id: id },
       include: {
@@ -146,6 +150,11 @@ export class AssignmentsService {
 
     if (!assignment) {
       throw new NotFoundException('Assignment not found');
+    }
+
+    if (user && user.role === 'Branch Manager' && user.branchId && assignment.branch_id !== user.branchId) {
+      const { ForbiddenException } = require('@nestjs/common');
+      throw new ForbiddenException('Branch Managers can only view assignments in their own branch');
     }
 
     return assignment;

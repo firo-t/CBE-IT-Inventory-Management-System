@@ -4,11 +4,13 @@ import DashboardLayout from '@/components/layout/DashboardLayout';
 import FormShell from '@/components/ui/FormShell';
 import { useParams } from 'next/navigation';
 import { api } from '@/lib/api';
+import { useRoleGuard } from '@/hooks/useRoleGuard';
 
 export default function EditBranch() {
+  useRoleGuard(['ADMIN']);
   const p = useParams();
   const [users, setUsers] = useState([]);
-  const [initialData, setInitialData] = useState(null);
+  const [initialData, setInitialData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

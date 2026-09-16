@@ -1,1 +1,26 @@
-'use client';import DashboardLayout from '@/components/layout/DashboardLayout';import CrudPage from '@/components/ui/CrudPage';export default function Users(){return <DashboardLayout><CrudPage title="Users" description="Manage system users, roles and account status." endpoint="/users" createHref="/users/create" columns={[{key:'full_name',label:'Name'},{key:'employee_id',label:'Employee ID'},{key:'email',label:'Email'},{key:'role.role_name',label:'Role'},{key:'branch_id',label:'Branch'},{key:'status',label:'Status',badge:true}]}/></DashboardLayout>}
+'use client';
+import DashboardLayout from '@/components/layout/DashboardLayout';
+import CrudPage from '@/components/ui/CrudPage';
+import { useRoleGuard } from '@/hooks/useRoleGuard';
+
+export default function Users() {
+  useRoleGuard(['ADMIN']);
+  return (
+    <DashboardLayout>
+      <CrudPage
+        title="Users"
+        description="Manage system users, roles and account status."
+        endpoint="/users"
+        createHref="/users/create"
+        columns={[
+          { key: 'full_name', label: 'Name' },
+          { key: 'employee_id', label: 'Employee ID' },
+          { key: 'email', label: 'Email' },
+          { key: 'role.role_name', label: 'Role' },
+          { key: 'branch.branch_name', label: 'Branch' },
+          { key: 'status', label: 'Status', badge: true },
+        ]}
+      />
+    </DashboardLayout>
+  );
+}

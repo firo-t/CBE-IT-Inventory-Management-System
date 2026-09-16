@@ -1,6 +1,7 @@
 import { AuditLogsService } from '../audit-logs/audit-logs.service';
 import { Injectable, ConflictException, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { Prisma } from '@prisma/client';
 import { CreateUserDto, UpdateUserDto, ChangePasswordDto, UpdateUserStatusDto } from './dto/user.dto';
 import * as bcrypt from 'bcryptjs';
 
@@ -58,9 +59,29 @@ export class UsersService {
     return this.mapSafeUser(user);
   }
 
-  async findAll() {
+  async findAll(search: string | undefined, role: string | undefined, user?: any) {
+    const where: Prisma.UserWhereInput = {};
+
+    if (user && user.role === 'Branch Manager' && user.branchId && role !== 'Hardware Technician') {
+      where.branch_id = user.branchId;
+    }
+
+    if (role) {
+      where.role = { role_name: role };
+    }
+
+    if (search) {
+      where.OR = [
+        { full_name: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } },
+        { employee_id: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
     const users = await this.prisma.user.findMany({
+      where,
       include: { role: true, branch: true },
+      orderBy: { created_at: 'desc' },
     });
     return users.map(this.mapSafeUser);
   }
@@ -76,17 +97,21 @@ export class UsersService {
     });
   }
 
-  async findOne(id: string) {
-    const user = await this.prisma.user.findUnique({
+  async findOne(id: string, user?: any) {
+    const targetUser = await this.prisma.user.findUnique({
       where: { user_id: id },
       include: { role: true, branch: true },
     });
-
-    if (!user) {
+    if (!targetUser) {
       throw new NotFoundException('User not found');
     }
 
-    return this.mapSafeUser(user);
+    if (user && user.role === 'Branch Manager' && user.branchId && targetUser.branch_id !== user.branchId) {
+      const { ForbiddenException } = require('@nestjs/common');
+      throw new ForbiddenException('Branch Managers can only view users in their own branch');
+    }
+
+    return this.mapSafeUser(targetUser);
   }
 
   async update(id: string, updateUserDto: UpdateUserDto, userObj: any) {

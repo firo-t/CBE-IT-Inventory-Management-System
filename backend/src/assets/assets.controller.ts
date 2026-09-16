@@ -20,13 +20,13 @@ export class AssetsController {
   @Roles('System Administrator / Admin', 'IT Inventory Officer', 'Branch Manager', 'Hardware Technician')
   @Get()
   findAll(@Query() query: AssetQueryDto, @CurrentUser() user: any) {
-    return this.assetsService.findAll(query);
+    return this.assetsService.findAll(query, user);
   }
 
   @Roles('System Administrator / Admin', 'IT Inventory Officer', 'Branch Manager', 'Hardware Technician')
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.assetsService.findOne(id);
+  findOne(@Param('id') id: string, @CurrentUser() user: any) {
+    return this.assetsService.findOne(id, user);
   }
 
   @Roles('System Administrator / Admin', 'IT Inventory Officer')

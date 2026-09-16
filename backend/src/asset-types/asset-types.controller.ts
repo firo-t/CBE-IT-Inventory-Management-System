@@ -17,6 +17,7 @@ export class AssetTypesController {
     return this.assetTypesService.create(createAssetTypeDto, user);
   }
 
+  @Roles('System Administrator / Admin', 'IT Inventory Officer', 'Branch Manager')
   @Get()
   findAll() {
     return this.assetTypesService.findAll();

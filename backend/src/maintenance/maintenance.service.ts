@@ -109,9 +109,17 @@ export class MaintenanceService {
     if (query.status) where.status = query.status;
     if (query.priority) where.priority = query.priority;
 
-    // Branch Manager scope
+    // Role-based scoping
     if (user.role === 'Branch Manager') {
       where.branch_id = user.branchId;
+    } else if (user.role === 'Hardware Technician') {
+      where.OR = [
+        { reported_by: user.userId },
+        { maintenance_record: { technician_id: user.userId } }
+      ];
+    } else if (user.role !== 'System Administrator / Admin' && user.role !== 'IT Inventory Officer') {
+      // Normal users can only see what they reported
+      where.reported_by = user.userId;
     }
 
     return this.prisma.maintenanceRequest.findMany({
@@ -121,7 +129,9 @@ export class MaintenanceService {
         asset: true,
         reporter: { select: { full_name: true, role: true } },
         branch: true,
-        maintenance_record: true,
+        maintenance_record: {
+          include: { technician: { select: { full_name: true } } }
+        },
       }
     });
   }
@@ -143,6 +153,14 @@ export class MaintenanceService {
 
     if (user.role === 'Branch Manager' && user.branchId !== request.branch_id) {
       throw new ForbiddenException('Branch Managers can only view their own branch requests');
+    } else if (user.role === 'Hardware Technician') {
+      if (request.reported_by !== user.userId && request.maintenance_record?.technician_id !== user.userId) {
+        throw new ForbiddenException('Technicians can only view requests they reported or are assigned to');
+      }
+    } else if (user.role !== 'System Administrator / Admin' && user.role !== 'IT Inventory Officer' && user.role !== 'Branch Manager') {
+      if (request.reported_by !== user.userId) {
+        throw new ForbiddenException('You can only view your own maintenance requests');
+      }
     }
 
     return request;
@@ -240,6 +258,16 @@ export class MaintenanceService {
         new_value: { diagnosis: record.diagnosis, repair_action: record.repair_action, status: record.status }
       });
 
+      // Notify the reporter
+      if (request.reported_by && request.reported_by !== user.userId) {
+        await this.notificationsService.createNotification(tx, {
+          user_id: request.reported_by,
+          title: 'Maintenance Record Updated',
+          message: `The technician has added or updated the maintenance record for your asset.`,
+          type: 'MAINTENANCE_RECORD_UPDATED'
+        });
+      }
+
       return record;
     });
   }
@@ -282,9 +310,7 @@ export class MaintenanceService {
         throw new BadRequestException('Invalid technician specified');
       }
 
-      if (user.role === 'Branch Manager' && technician.branch_id !== user.branchId) {
-        throw new ForbiddenException('Branch Managers can only assign to technicians within their own branch');
-      }
+      // Removed: Branch Managers are allowed to assign technicians outside their branch because technicians operate at the district level.
 
       let record = request.maintenance_record;
       if (record) {
@@ -326,6 +352,16 @@ export class MaintenanceService {
         });
       }
 
+      // Notify the reporter
+      if (request.reported_by && request.reported_by !== technicianId) {
+        await this.notificationsService.createNotification(tx, {
+          user_id: request.reported_by,
+          title: 'Technician Assigned',
+          message: `Technician ${technician.full_name} has been assigned to your maintenance request for asset ${request.asset.tag_no}.`,
+          type: 'MAINTENANCE_ASSIGNED'
+        });
+      }
+
       return record;
     });
   }
@@ -334,7 +370,7 @@ export class MaintenanceService {
     return this.prisma.$transaction(async (tx) => {
       const request = await tx.maintenanceRequest.findUnique({
         where: { request_id: id },
-        include: { maintenance_record: true, asset: true }
+        include: { maintenance_record: true, asset: true, branch: true }
       });
 
       if (!request) throw new NotFoundException('Maintenance request not found');
@@ -400,6 +436,16 @@ export class MaintenanceService {
           message: `Maintenance request for asset ${request.asset.tag_no} is now ${updated.status}.`,
           type: isCompleting ? 'MAINTENANCE_COMPLETED' : 'MAINTENANCE_STATUS_CHANGED'
         });
+        
+        // Notify the branch manager if completing
+        if (isCompleting && request.branch?.manager_id && request.branch.manager_id !== request.reported_by) {
+          await this.notificationsService.createNotification(tx, {
+            user_id: request.branch.manager_id,
+            title: 'Asset Maintenance Completed',
+            message: `Maintenance for asset ${request.asset.tag_no} at your branch is now complete.`,
+            type: 'MAINTENANCE_COMPLETED'
+          });
+        }
       }
 
       return updated;

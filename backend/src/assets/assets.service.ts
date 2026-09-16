@@ -68,15 +68,20 @@ export class AssetsService {
     return asset;
   }
 
-  async findAll(query: AssetQueryDto) {
+  async findAll(query: AssetQueryDto, user?: any) {
     const { search, tag_no, serial_no, asset_type_id, current_branch_id, status, condition } = query;
 
     const where: Prisma.AssetWhereInput = {};
 
+    if (user && user.role === 'Branch Manager' && user.branchId) {
+      where.current_branch_id = user.branchId;
+    } else if (current_branch_id) {
+      where.current_branch_id = current_branch_id;
+    }
+
     if (tag_no) where.tag_no = tag_no;
     if (serial_no) where.serial_no = serial_no;
     if (asset_type_id) where.asset_type_id = asset_type_id;
-    if (current_branch_id) where.current_branch_id = current_branch_id;
     if (status) where.status = status;
     if (condition) where.condition = condition;
 
@@ -114,7 +119,7 @@ export class AssetsService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, user?: any) {
     const asset = await this.prisma.asset.findUnique({
       where: { asset_id: id },
       include: {
@@ -139,6 +144,11 @@ export class AssetsService {
 
     if (!asset) {
       throw new NotFoundException('Asset not found');
+    }
+
+    if (user && user.role === 'Branch Manager' && user.branchId && asset.current_branch_id !== user.branchId) {
+      const { ForbiddenException } = require('@nestjs/common');
+      throw new ForbiddenException('Branch Managers can only view assets in their own branch');
     }
 
     return asset;

@@ -20,13 +20,13 @@ export class DispatchesController {
   @Roles('System Administrator / Admin', 'IT Inventory Officer', 'Branch Manager', 'Hardware Technician')
   @Get()
   findAll(@Query() query: DispatchQueryDto, @CurrentUser() user: any) {
-    return this.dispatchesService.findAll(query);
+    return this.dispatchesService.findAll(query, user);
   }
 
   @Roles('System Administrator / Admin', 'IT Inventory Officer', 'Branch Manager', 'Hardware Technician')
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.dispatchesService.findOne(id);
+  findOne(@Param('id') id: string, @CurrentUser() user: any) {
+    return this.dispatchesService.findOne(id, user);
   }
 
   @Roles('System Administrator / Admin', 'IT Inventory Officer', 'Branch Manager')

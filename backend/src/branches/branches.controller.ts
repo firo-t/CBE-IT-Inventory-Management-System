@@ -17,6 +17,7 @@ export class BranchesController {
     return this.branchesService.create(createBranchDto, user);
   }
 
+  @Roles('System Administrator / Admin', 'IT Inventory Officer', 'Branch Manager')
   @Get()
   findAll() {
     return this.branchesService.findAll();

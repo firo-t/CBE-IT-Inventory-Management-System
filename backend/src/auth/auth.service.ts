@@ -17,7 +17,7 @@ export class AuthService {
     // 1. Find user by email
     const user = await this.prisma.user.findUnique({
       where: { email },
-      include: { role: true },
+      include: { role: true, branch: true },
     });
 
     if (!user) {
@@ -55,6 +55,7 @@ export class AuthService {
         phone: user.phone,
         role: user.role?.role_name,
         branchId: user.branch_id,
+        branchName: user.branch?.branch_name,
         status: user.status,
       }
     };

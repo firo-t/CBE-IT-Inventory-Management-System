@@ -96,8 +96,12 @@ export class DispatchesService {
     });
   }
 
-  async findAll(query: DispatchQueryDto) {
+  async findAll(query: DispatchQueryDto, user?: any) {
     const where: Prisma.DispatchWhereInput = {};
+
+    if (user && user.role === 'Branch Manager' && user.branchId) {
+      where.destination_branch_id = user.branchId;
+    }
 
     if (query.status) {
       where.status = query.status;
@@ -113,17 +117,24 @@ export class DispatchesService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, user?: any) {
     const dispatch = await this.prisma.dispatch.findUnique({
       where: { dispatch_id: id },
       include: {
-        asset: true,
+        asset: {
+          include: { asset_type: true }
+        },
         destination_branch: true,
       }
     });
 
     if (!dispatch) {
       throw new NotFoundException('Dispatch not found');
+    }
+
+    if (user && user.role === 'Branch Manager' && user.branchId && dispatch.destination_branch_id !== user.branchId) {
+      const { ForbiddenException } = require('@nestjs/common');
+      throw new ForbiddenException('Branch Managers can only view dispatches to their own branch');
     }
 
     return dispatch;

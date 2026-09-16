@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,6 +5,215 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  user_id              String               @id @default(uuid())
+  full_name            String
+  employee_id          String               @unique
+  phone                String?
+  email                String               @unique
+  password_hash        String
+  role_id              String
+  branch_id            String?
+  status               UserStatus           @default(ACTIVE)
+  created_at           DateTime             @default(now())
+  updated_at           DateTime             @updatedAt
+  assignments          Assignment[]         @relation("AssignedBy")
+  attachments          Attachment[]         @relation("UploadedBy")
+  audit_logs           AuditLog[]
+  managed_branch       Branch?              @relation("BranchManager")
+  maintenance_records  MaintenanceRecord[]  @relation("Technician")
+  maintenance_requests MaintenanceRequest[] @relation("ReportedBy")
+  notifications        Notification[]
+  branch               Branch?              @relation("UserBranch", fields: [branch_id], references: [branch_id])
+  role                 Role                 @relation(fields: [role_id], references: [role_id])
+
+  @@index([role_id])
+  @@index([branch_id])
+}
+
+model Role {
+  role_id     String  @id @default(uuid())
+  role_name   String  @unique
+  description String?
+  users       User[]
+}
+
+model Branch {
+  branch_id            String               @id @default(uuid())
+  branch_code          String               @unique
+  branch_name          String
+  manager_id           String?              @unique
+  contact_person       String?
+  phone                String?
+  location             String
+  assets               Asset[]
+  assignments          Assignment[]
+  manager              User?                @relation("BranchManager", fields: [manager_id], references: [user_id])
+  dispatches_received  Dispatch[]           @relation("DestinationBranch")
+  maintenance_requests MaintenanceRequest[]
+  users                User[]               @relation("UserBranch")
+}
+
+model AssetType {
+  asset_type_id String  @id @default(uuid())
+  type_name     String  @unique
+  description   String?
+  assets        Asset[]
+}
+
+model Asset {
+  asset_id             String               @id @default(uuid())
+  tag_no               String               @unique
+  serial_no            String?
+  asset_type_id        String
+  model                String?
+  ws_no                String?
+  condition            String?
+  description          String?
+  status               AssetStatus          @default(AVAILABLE)
+  current_branch_id    String?
+  created_at           DateTime             @default(now())
+  updated_at           DateTime             @updatedAt
+  asset_type           AssetType            @relation(fields: [asset_type_id], references: [asset_type_id])
+  current_branch       Branch?              @relation(fields: [current_branch_id], references: [branch_id])
+  assignments          Assignment[]
+  attachments          Attachment[]
+  dispatches           Dispatch[]
+  maintenance_requests MaintenanceRequest[]
+
+  @@index([tag_no])
+  @@index([serial_no])
+  @@index([asset_type_id])
+  @@index([status])
+  @@index([current_branch_id])
+}
+
+model Assignment {
+  assignment_id String           @id @default(uuid())
+  asset_id      String
+  employee_id   String
+  employee_name String
+  branch_id     String
+  assigned_date DateTime         @default(now())
+  returned_date DateTime?
+  assigned_by   String
+  status        AssignmentStatus @default(ACTIVE)
+  asset         Asset            @relation(fields: [asset_id], references: [asset_id])
+  assigner      User             @relation("AssignedBy", fields: [assigned_by], references: [user_id])
+  branch        Branch           @relation(fields: [branch_id], references: [branch_id])
+
+  @@index([asset_id])
+  @@index([employee_id])
+  @@index([branch_id])
+  @@index([status])
+}
+
+model Dispatch {
+  dispatch_id           String         @id @default(uuid())
+  asset_id              String
+  source_location       String
+  destination_branch_id String
+  receiver_name         String?
+  receiver_id           String?
+  receiver_phone        String?
+  receiver_signature    String?
+  dispatched_date       DateTime       @default(now())
+  status                DispatchStatus @default(DISPATCHED)
+  asset                 Asset          @relation(fields: [asset_id], references: [asset_id])
+  destination_branch    Branch         @relation("DestinationBranch", fields: [destination_branch_id], references: [branch_id])
+
+  @@index([asset_id])
+  @@index([destination_branch_id])
+  @@index([status])
+}
+
+model MaintenanceRequest {
+  request_id          String              @id @default(uuid())
+  asset_id            String
+  reported_by         String
+  branch_id           String
+  problem_description String
+  priority            MaintenancePriority @default(MEDIUM)
+  status              MaintenanceStatus   @default(REPORTED)
+  reported_date       DateTime            @default(now())
+  attachments         Attachment[]
+  maintenance_record  MaintenanceRecord?
+  asset               Asset               @relation(fields: [asset_id], references: [asset_id])
+  branch              Branch              @relation(fields: [branch_id], references: [branch_id])
+  reporter            User                @relation("ReportedBy", fields: [reported_by], references: [user_id])
+
+  @@index([asset_id])
+  @@index([reported_by])
+  @@index([branch_id])
+  @@index([status])
+}
+
+model MaintenanceRecord {
+  maintenance_id      String             @id @default(uuid())
+  request_id          String             @unique
+  technician_id       String?
+  diagnosis           String?
+  repair_action       String?
+  parts_used          String?
+  start_date          DateTime?
+  completion_date     DateTime?
+  remarks             String?
+  status              MaintenanceStatus  @default(REPORTED)
+  maintenance_request MaintenanceRequest @relation(fields: [request_id], references: [request_id])
+  technician          User?              @relation("Technician", fields: [technician_id], references: [user_id])
+
+  @@index([technician_id])
+  @@index([status])
+}
+
+model Attachment {
+  attachment_id          String              @id @default(uuid())
+  asset_id               String?
+  maintenance_request_id String?
+  file_name              String
+  file_path              String
+  file_type              String
+  file_size              Int?
+  uploaded_by            String
+  uploaded_at            DateTime            @default(now())
+  asset                  Asset?              @relation(fields: [asset_id], references: [asset_id])
+  maintenance_request    MaintenanceRequest? @relation(fields: [maintenance_request_id], references: [request_id])
+  uploader               User                @relation("UploadedBy", fields: [uploaded_by], references: [user_id])
+
+  @@index([asset_id])
+  @@index([maintenance_request_id])
+}
+
+model AuditLog {
+  audit_id    String   @id @default(uuid())
+  user_id     String?
+  action      String
+  entity_type String
+  entity_id   String?
+  description String?
+  ip_address  String?
+  created_at  DateTime @default(now())
+  user        User?    @relation(fields: [user_id], references: [user_id])
+
+  @@index([user_id])
+  @@index([entity_type, entity_id])
+  @@index([created_at])
+}
+
+model Notification {
+  notification_id String   @id @default(uuid())
+  user_id         String
+  title           String
+  message         String
+  type            String?
+  is_read         Boolean  @default(false)
+  created_at      DateTime @default(now())
+  user            User     @relation(fields: [user_id], references: [user_id])
+
+  @@index([user_id])
+  @@index([is_read])
 }
 
 enum UserStatus {
@@ -54,233 +260,4 @@ enum MaintenanceStatus {
   REPAIRED
   COMPLETED
   CLOSED
-}
-
-model User {
-  user_id       String     @id @default(uuid())
-  full_name     String
-  employee_id   String     @unique
-  phone         String?
-  email         String     @unique
-  password_hash String
-  role_id       String
-  branch_id     String?
-  status        UserStatus @default(ACTIVE)
-  created_at    DateTime   @default(now())
-  updated_at    DateTime   @updatedAt
-
-  // Relationships
-  role                 Role                 @relation(fields: [role_id], references: [role_id])
-  branch               Branch?              @relation("UserBranch", fields: [branch_id], references: [branch_id])
-  managed_branch       Branch?              @relation("BranchManager")
-  assignments          Assignment[]         @relation("AssignedBy")
-  maintenance_requests MaintenanceRequest[] @relation("ReportedBy")
-  maintenance_records  MaintenanceRecord[]  @relation("Technician")
-  attachments          Attachment[]         @relation("UploadedBy")
-  audit_logs           AuditLog[]
-  notifications        Notification[]
-
-  @@index([role_id])
-  @@index([branch_id])
-}
-
-model Role {
-  role_id     String  @id @default(uuid())
-  role_name   String  @unique
-  description String?
-  users       User[]
-}
-
-model Branch {
-  branch_id      String  @id @default(uuid())
-  branch_code    String  @unique
-  branch_name    String
-  manager_id     String? @unique
-  contact_person String?
-  phone          String?
-  location       String
-
-  // Relationships
-  manager              User?                @relation("BranchManager", fields: [manager_id], references: [user_id])
-  users                User[]               @relation("UserBranch")
-  assets               Asset[]
-  assignments          Assignment[]
-  dispatches_received  Dispatch[]           @relation("DestinationBranch")
-  maintenance_requests MaintenanceRequest[]
-}
-
-model AssetType {
-  asset_type_id String  @id @default(uuid())
-  type_name     String  @unique
-  description   String?
-  assets        Asset[]
-}
-
-model Asset {
-  asset_id          String      @id @default(uuid())
-  tag_no            String      @unique
-  serial_no         String?
-  asset_type_id     String
-  model             String?
-  ws_no             String?
-  condition         String?
-  description       String?
-  status            AssetStatus @default(AVAILABLE)
-  current_branch_id String?
-  created_at        DateTime    @default(now())
-  updated_at        DateTime    @updatedAt
-
-  // Relationships
-  asset_type           AssetType            @relation(fields: [asset_type_id], references: [asset_type_id])
-  current_branch       Branch?              @relation(fields: [current_branch_id], references: [branch_id])
-  assignments          Assignment[]
-  dispatches           Dispatch[]
-  maintenance_requests MaintenanceRequest[]
-  attachments          Attachment[]
-
-  @@index([tag_no])
-  @@index([serial_no])
-  @@index([asset_type_id])
-  @@index([status])
-  @@index([current_branch_id])
-}
-
-model Assignment {
-  assignment_id String           @id @default(uuid())
-  asset_id      String
-  employee_id   String
-  employee_name String
-  branch_id     String
-  assigned_date DateTime         @default(now())
-  returned_date DateTime?
-  assigned_by   String
-  status        AssignmentStatus @default(ACTIVE)
-
-  // Relationships
-  asset    Asset  @relation(fields: [asset_id], references: [asset_id])
-  branch   Branch @relation(fields: [branch_id], references: [branch_id])
-  assigner User   @relation("AssignedBy", fields: [assigned_by], references: [user_id])
-
-  @@index([asset_id])
-  @@index([employee_id])
-  @@index([branch_id])
-  @@index([status])
-}
-
-model Dispatch {
-  dispatch_id           String         @id @default(uuid())
-  asset_id              String
-  source_location       String
-  destination_branch_id String
-  receiver_name         String?
-  receiver_id           String?
-  receiver_phone        String?
-  receiver_signature    String?
-  dispatched_date       DateTime       @default(now())
-  status                DispatchStatus @default(DISPATCHED)
-
-  // Relationships
-  asset              Asset  @relation(fields: [asset_id], references: [asset_id])
-  destination_branch Branch @relation("DestinationBranch", fields: [destination_branch_id], references: [branch_id])
-
-  @@index([asset_id])
-  @@index([destination_branch_id])
-  @@index([status])
-}
-
-model MaintenanceRequest {
-  request_id          String              @id @default(uuid())
-  asset_id            String
-  reported_by         String
-  branch_id           String
-  problem_description String
-  priority            MaintenancePriority @default(MEDIUM)
-  status              MaintenanceStatus   @default(REPORTED)
-  reported_date       DateTime            @default(now())
-
-  // Relationships
-  asset              Asset              @relation(fields: [asset_id], references: [asset_id])
-  reporter           User               @relation("ReportedBy", fields: [reported_by], references: [user_id])
-  branch             Branch             @relation(fields: [branch_id], references: [branch_id])
-  maintenance_record MaintenanceRecord?
-  attachments        Attachment[]
-
-  @@index([asset_id])
-  @@index([reported_by])
-  @@index([branch_id])
-  @@index([status])
-}
-
-model MaintenanceRecord {
-  maintenance_id  String            @id @default(uuid())
-  request_id      String            @unique
-  technician_id   String?
-  diagnosis       String?
-  repair_action   String?
-  parts_used      String?
-  start_date      DateTime?
-  completion_date DateTime?
-  remarks         String?
-  status          MaintenanceStatus @default(REPORTED)
-
-  // Relationships
-  maintenance_request MaintenanceRequest @relation(fields: [request_id], references: [request_id])
-  technician          User?              @relation("Technician", fields: [technician_id], references: [user_id])
-
-  @@index([technician_id])
-  @@index([status])
-}
-
-model Attachment {
-  attachment_id          String   @id @default(uuid())
-  asset_id               String?
-  maintenance_request_id String?
-  file_name              String
-  file_path              String
-  file_type              String
-  file_size              Int?
-  uploaded_by            String
-  uploaded_at            DateTime @default(now())
-
-  // Relationships
-  asset               Asset?              @relation(fields: [asset_id], references: [asset_id])
-  maintenance_request MaintenanceRequest? @relation(fields: [maintenance_request_id], references: [request_id])
-  uploader            User                @relation("UploadedBy", fields: [uploaded_by], references: [user_id])
-
-  @@index([asset_id])
-  @@index([maintenance_request_id])
-}
-
-model AuditLog {
-  audit_id    String   @id @default(uuid())
-  user_id     String?
-  action      String
-  entity_type String
-  entity_id   String?
-  description String?
-  ip_address  String?
-  created_at  DateTime @default(now())
-
-  // Relationships
-  user User? @relation(fields: [user_id], references: [user_id])
-
-  @@index([user_id])
-  @@index([entity_type, entity_id])
-  @@index([created_at])
-}
-
-model Notification {
-  notification_id String   @id @default(uuid())
-  user_id         String
-  title           String
-  message         String
-  type            String?
-  is_read         Boolean  @default(false)
-  created_at      DateTime @default(now())
-
-  // Relationships
-  user User @relation(fields: [user_id], references: [user_id])
-
-  @@index([user_id])
-  @@index([is_read])
 }
