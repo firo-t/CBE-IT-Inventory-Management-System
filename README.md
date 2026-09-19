@@ -1,4 +1,4 @@
-# CBE IT Hardware Inventory Management System
+# CBE IT Inventory Management System
 
 This is a centralized web-based application built to track the entire hardware asset workflow for CBE, from initial receipt and technical inspection, to branch assignment, maintenance loops, and eventual retirement.
 
