@@ -13,7 +13,6 @@ export default function BranchDetail() {
         title="Branch Details"
         endpoint={`/branches/${p.id}`}
         fields={[
-          { key: 'branch_id', label: 'Branch ID' },
           { key: 'branch_code', label: 'Branch Code' },
           { key: 'branch_name', label: 'Branch Name' },
           { key: 'location', label: 'Location' },

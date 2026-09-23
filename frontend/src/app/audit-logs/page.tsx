@@ -13,11 +13,9 @@ export default function Audit() {
         endpoint="/audit-logs"
         searchPlaceholder="Search by action or entity ID..."
         columns={[
-          { key: 'id', label: 'ID' },
-          { key: 'user_id', label: 'User' },
+          { key: 'user.full_name', label: 'User' },
           { key: 'action', label: 'Action' },
           { key: 'entity_type', label: 'Entity' },
-          { key: 'entity_id', label: 'Entity ID' },
           { key: 'created_at', label: 'Date' },
         ]}
       />

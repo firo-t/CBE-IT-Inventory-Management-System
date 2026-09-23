@@ -62,7 +62,6 @@ export default function MaintenanceRequestDetail() {
         title="Maintenance Request"
         endpoint={`/maintenance/requests/${id}`}
         fields={[
-          { key: 'request_id', label: 'Request ID' },
           { key: 'asset.tag_no', label: 'Asset Tag' },
           { key: 'asset.model', label: 'Asset Model' },
           { key: 'problem_description', label: 'Problem Description' },

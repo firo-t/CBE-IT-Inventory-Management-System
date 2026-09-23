@@ -29,13 +29,12 @@ export default function DispatchDetail() {
         title="Dispatch Details"
         endpoint={`/dispatches/${p.id}`}
         fields={[
-          { key: 'dispatch_id', label: 'Dispatch ID' },
           { key: 'asset.tag_no', label: 'Asset Tag' },
           { key: 'asset.model', label: 'Asset Model' },
           { key: 'source_location', label: 'Source' },
           { key: 'destination_branch.branch_name', label: 'Destination Branch' },
           { key: 'receiver_name', label: 'Receiver' },
-          { key: 'receiver_id', label: 'Receiver ID' },
+          { key: 'receiver_id', label: 'Receiver Employee ID' },
           { key: 'receiver_phone', label: 'Phone' },
           { key: 'status', label: 'Status', badge: true },
           { key: 'dispatched_date', label: 'Dispatched' },

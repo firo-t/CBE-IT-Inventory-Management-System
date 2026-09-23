@@ -41,7 +41,6 @@ export default function UserDetail() {
         title="User Details"
         endpoint={`/users/${p.id}`}
         fields={[
-          { key: 'user_id', label: 'User ID' },
           { key: 'full_name', label: 'Full Name' },
           { key: 'employee_id', label: 'Employee ID' },
           { key: 'email', label: 'Email' },

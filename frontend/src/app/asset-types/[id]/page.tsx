@@ -13,7 +13,6 @@ export default function AssetTypeDetail() {
         title="Asset Type Details"
         endpoint={`/asset-types/${p.id}`}
         fields={[
-          { key: 'asset_type_id', label: 'ID' },
           { key: 'type_name', label: 'Type Name' },
           { key: 'description', label: 'Description' },
         ]}
