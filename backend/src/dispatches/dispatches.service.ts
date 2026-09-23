@@ -63,6 +63,7 @@ export class DispatchesService {
           asset_id: createDispatchDto.asset_id,
           source_location: createDispatchDto.source_location,
           destination_branch_id: createDispatchDto.destination_branch_id,
+          dispatched_by: user.userId,
           receiver_name: createDispatchDto.receiver_name,
           receiver_id: createDispatchDto.receiver_id,
           receiver_phone: createDispatchDto.receiver_phone,
@@ -214,7 +215,7 @@ export class DispatchesService {
         new_value: { status: updatedDispatch.status }
       });
 
-      // Find all IT Inventory Officers to notify them that the branch received it
+      // Notify IT Inventory Officers that the branch received it
       const officers = await tx.user.findMany({
         where: {
           role: {
@@ -229,6 +230,16 @@ export class DispatchesService {
           user_id: officer.user_id,
           title: 'Equipment Received',
           message: `Asset ${updatedDispatch.asset.tag_no} was received at ${updatedDispatch.destination_branch.branch_name}.`,
+          type: 'DISPATCH_RECEIVED'
+        });
+      }
+
+      // Notify the original dispatcher (if different from the receiver)
+      if (dispatch.dispatched_by && dispatch.dispatched_by !== user.userId) {
+        await this.notificationsService.createNotification(tx, {
+          user_id: dispatch.dispatched_by,
+          title: 'Asset Received at Destination',
+          message: `Asset ${updatedDispatch.asset.tag_no} you dispatched has been received at ${updatedDispatch.destination_branch.branch_name}.`,
           type: 'DISPATCH_RECEIVED'
         });
       }

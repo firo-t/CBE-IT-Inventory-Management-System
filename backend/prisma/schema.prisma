@@ -22,6 +22,7 @@ model User {
   assignments          Assignment[]         @relation("AssignedBy")
   attachments          Attachment[]         @relation("UploadedBy")
   audit_logs           AuditLog[]
+  dispatches           Dispatch[]           @relation("DispatchedBy")
   managed_branch       Branch?              @relation("BranchManager")
   maintenance_records  MaintenanceRecord[]  @relation("Technician")
   maintenance_requests MaintenanceRequest[] @relation("ReportedBy")
@@ -115,6 +116,7 @@ model Dispatch {
   asset_id              String
   source_location       String
   destination_branch_id String
+  dispatched_by         String?
   receiver_name         String?
   receiver_id           String?
   receiver_phone        String?
@@ -123,10 +125,12 @@ model Dispatch {
   status                DispatchStatus @default(DISPATCHED)
   asset                 Asset          @relation(fields: [asset_id], references: [asset_id])
   destination_branch    Branch         @relation("DestinationBranch", fields: [destination_branch_id], references: [branch_id])
+  dispatcher            User?          @relation("DispatchedBy", fields: [dispatched_by], references: [user_id])
 
   @@index([asset_id])
   @@index([destination_branch_id])
   @@index([status])
+  @@index([dispatched_by])
 }
 
 model MaintenanceRequest {

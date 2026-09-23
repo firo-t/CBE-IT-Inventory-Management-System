@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { api } from '@/lib/api';
 import Image from 'next/image';
 
 import {
@@ -47,6 +48,18 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const [unread, setUnread] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const fetchUnread = () => {
+    api.get('/notifications/unread')
+      .then(r => {
+        const data = r.data;
+        const items = Array.isArray(data) ? data : (data?.data || data?.items || []);
+        setUnread(items.length);
+      })
+      .catch(() => {});
+  };
 
   useEffect(() => {
     if (!getUser() && !localStorage.getItem('cbe_access_token')) {
@@ -57,6 +70,12 @@ export default function DashboardLayout({
     if (window.innerWidth > 760) {
       setOpen(true);
     }
+
+    fetchUnread();
+    intervalRef.current = setInterval(fetchUnread, 60_000);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
   }, []);
 
   const path = usePathname();
@@ -179,8 +198,25 @@ export default function DashboardLayout({
               className="btn btn-secondary"
               href="/notifications"
               aria-label="Notifications"
+              style={{ position: 'relative' }}
+              onClick={() => setUnread(0)}
             >
               <Bell size={16} />
+              {unread > 0 && (
+                <span
+                  style={{
+                    position: 'absolute',
+                    top: 2,
+                    right: 2,
+                    width: 8,
+                    height: 8,
+                    borderRadius: '50%',
+                    background: '#e53e3e',
+                    border: '2px solid var(--surface, #fff)',
+                    display: 'block',
+                  }}
+                />
+              )}
             </Link>
           </div>
 
